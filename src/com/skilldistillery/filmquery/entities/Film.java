@@ -24,39 +24,19 @@ public class Film {
 
 	public Film(int id, String title, String description, short releaseYear, int languageId, int rentalDuration,
 			double rate, int length, double replacementCost, String rating, String specialFeatures, String language) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.releaseYear = releaseYear;
+		this.languageId = languageId;
+		this.rentalDuration = rentalDuration;
+		this.rating = rating;
+		this.length = length;
+		this.replacmentCost = replacementCost;
+		this.rentalRate = rate;
+		this.specialFeatures = specialFeatures;
+		this.language = language;
 
-	}
-
-	@Override
-	public String toString() {
-		return "Film [id=" + id + ", title=" + title + ", description=" + description + ", releaseYear=" + releaseYear
-				+ ", languageId=" + languageId + ", rentalDuration=" + rentalDuration + ", rentalRate=" + rentalRate
-				+ ", length=" + length + ", replacmentCost=" + replacmentCost + ", rating=" + rating
-				+ ", specialFeatures=" + specialFeatures + ", filmCast=" + filmCast + ", language=" + language + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(description, filmCast, id, language, languageId, length, rating, releaseYear,
-				rentalDuration, rentalRate, replacmentCost, specialFeatures, title);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Film other = (Film) obj;
-		return Objects.equals(description, other.description) && Objects.equals(filmCast, other.filmCast)
-				&& id == other.id && Objects.equals(language, other.language) && languageId == other.languageId
-				&& length == other.length && Objects.equals(rating, other.rating) && releaseYear == other.releaseYear
-				&& rentalDuration == other.rentalDuration
-				&& Double.doubleToLongBits(rentalRate) == Double.doubleToLongBits(other.rentalRate)
-				&& Double.doubleToLongBits(replacmentCost) == Double.doubleToLongBits(other.replacmentCost)
-				&& Objects.equals(specialFeatures, other.specialFeatures) && Objects.equals(title, other.title);
 	}
 
 	public int getId() {
@@ -161,6 +141,36 @@ public class Film {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(description, filmCast, id, language, languageId, length, rating, releaseYear,
+				rentalDuration, rentalRate, replacmentCost, specialFeatures, title);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Film other = (Film) obj;
+		return Objects.equals(description, other.description) && Objects.equals(filmCast, other.filmCast)
+				&& id == other.id && Objects.equals(language, other.language) && languageId == other.languageId
+				&& length == other.length && Objects.equals(rating, other.rating) && releaseYear == other.releaseYear
+				&& rentalDuration == other.rentalDuration
+				&& Double.doubleToLongBits(rentalRate) == Double.doubleToLongBits(other.rentalRate)
+				&& Double.doubleToLongBits(replacmentCost) == Double.doubleToLongBits(other.replacmentCost)
+				&& Objects.equals(specialFeatures, other.specialFeatures) && Objects.equals(title, other.title);
+	}
+
+	@Override
+	public String toString() {
+		return "Film title= " + title + "\ndescription= " + description + "\nreleaseYear= " + releaseYear + "\nrating= "
+				+ rating + "\nfilmCast= " + filmCast + "\nlanguage= " + language + "\n\n";
 	}
 
 }

@@ -14,5 +14,5 @@ public interface DatabaseAccessor {
 
 	public List<Film> findFilmsByActorId(int actorId);
 
-	public List<Film> findFilmByKeyWord(String keyWord);
+	public List<Film> findFilmsByKeyWord(String keyWord);
 }

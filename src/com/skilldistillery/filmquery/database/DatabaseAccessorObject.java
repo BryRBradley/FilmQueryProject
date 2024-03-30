@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
@@ -63,16 +62,21 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public List<Film> findFilmByKeyWord(String keyWord) {
+	public List<Film> findFilmsByKeyWord(String keyWord) {
 		String USER = "student";
 		String PASS = "student";
-		String userIn = "";
+		Film film = null;
 		List<Film> films = new ArrayList<>();
 		try {
 			Connection conn = DriverManager.getConnection(URL, USER, PASS);
-			String sql = "SELECT film.title, film.description From film  WHERE film.title LIKE ? OR film.description LIKE ?";
+			String sql = "SELECT film.id, film.title, film.description, film.release_year, film.language_id, "
+					+ "film.rental_duration, film.rental_rate, film.length, film.replacement_cost, "
+					+ "film.rating, film.special_features, language.name "
+					+ "FROM film JOIN language ON film.language_id = language.id "
+					+ "WHERE film.title LIKE ? OR film.description LIKE ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, "%" + userIn + "%");
+			stmt.setString(1, "%" + keyWord + "%");
+			stmt.setString(2, "%" + keyWord + "%");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				int filmId = rs.getInt("id");
@@ -86,11 +90,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				double replacementCost = rs.getDouble("replacement_cost");
 				String rating = rs.getString("rating");
 				String specialFeatures = rs.getString("special_features");
-				String language = rs.getString("language");
-				Film film = new Film(filmId, title, description, releaseYear, languageId, rentalDuration, rate, length,
+				String language = rs.getString("name");
+				film = new Film(filmId, title, description, releaseYear, languageId, rentalDuration, rate, length,
 						replacementCost, rating, specialFeatures, language);
 				films.add(film);
 			}
+
 			rs.close();
 			stmt.close();
 			conn.close();
@@ -104,18 +109,18 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	public Film findFilmById(int filmId) {
 		String USER = "student";
 		String PASS = "student";
-		Scanner sc = new Scanner(System.in);
 		Film film = null;
 		try {
 			Connection conn = DriverManager.getConnection(URL, USER, PASS);
 			film = null;
-			String sql = "SELECT *  FROM film JOIN language on film.language_id=language.id WHERE id = ?";
+			String sql = "SELECT film.*, language.name FROM film JOIN language on film.language_id = language.id WHERE film.id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet filmResult = stmt.executeQuery();
 			if (filmResult.next()) {
 				film = new Film();
-				// film.setId(filmResult.getInt("Id"));
+				// int id = filmResult.getInt("Id")
+				film.setId(filmResult.getInt("Id"));
 				film.setTitle(filmResult.getString("title"));
 				film.setDescription(filmResult.getString("description"));
 				film.setReleaseYear(filmResult.getShort("release_year"));
@@ -126,17 +131,21 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				// film.setReplacmentCost(filmResult.getDouble("replacement_cost"));
 				film.setRating(filmResult.getString("rating"));
 				// film.setSpecialFeatures(filmResult.getString("special_features"));
-				film.setLanguage(filmResult.getString("language"));
+				film.setLanguage(filmResult.getString("name"));
 				// Call findActorsByFilmId();passing the provided film ID
 				// set the return list of actors into the film object.
 				List<Actor> actorList = findActorsByFilmId(filmId);
 				film.setFilmCast(actorList);
-
+				// film = new film(.....);
 			}
+			filmResult.close();
+			stmt.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return (film);
+
 	}
 
 	@Override
@@ -152,7 +161,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, actorId);
 			ResultSet actorResult = stmt.executeQuery();
-			if (actorResult.next()) {
+			while (actorResult.next()) {
 				actor = new Actor(); // Create the object
 				// Here is our mapping of query columns to our object fields:
 				actor.setId(actorResult.getInt("id"));
@@ -166,6 +175,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				// }
 
 			}
+			actorResult.close();
+			stmt.close();
+			conn.close();
 			return actor;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -174,25 +186,26 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return actor;
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
 	public List<Actor> findActorsByFilmId(int filmId) {
 		String USER = "student";
 		String PASS = "student";
 		Actor actor = null;
+		List<Actor> actorsList = new ArrayList<>();
 		try {
 			Connection conn = DriverManager.getConnection(URL, USER, PASS);
-			// ...
-			String sql = "SELECT * FROM actor  WHERE id = ?";
+			String sql = "SELECT actor.* FROM actor Join film_actor on actor.id = film_actor.actor_id WHERE film_actor.film_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet actorResult = stmt.executeQuery();
-			if (actorResult.next()) {
+			while (actorResult.next()) {
 				actor = new Actor(); // Create the object
 				// Here is our mapping of query columns to our object fields:
 				actor.setId(actorResult.getInt("id"));
 				actor.setFirstName(actorResult.getString("first_name"));
 				actor.setLastName(actorResult.getString("last_name"));
-
+				// System.out.println("**********" + actor);
+				actorsList.add(actor);
 				// if(actorResult.next){
 				// String firstName = actorResult.getString.("first_name");
 				// String lastName = actorResult.getString.("last_name");
@@ -200,10 +213,15 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				// }
 
 			}
+			System.err.println();
+			actorResult.close();
+			stmt.close();
+			conn.close();
 		} catch (SQLException e) {
 
 			e.printStackTrace();
 		}
-		return (List<Actor>) actor;
+
+		return actorsList;
 	}
 }
