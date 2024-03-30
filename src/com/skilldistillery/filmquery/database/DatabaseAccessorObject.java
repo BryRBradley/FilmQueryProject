@@ -20,7 +20,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -71,22 +70,28 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			Connection conn = DriverManager.getConnection(URL, USER, PASS);
 			film = null;
-			String sql = "SELECT *  FROM film  WHERE film_id = ?";
+			String sql = "SELECT *  FROM film  WHERE id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet filmResult = stmt.executeQuery();
 			if (filmResult.next()) {
 				film = new Film();
-				film.setTitle() = (filmResult.getString("title"));
-				film.setDescription() = (filmResult.getString("description"));
-				film.setReleaseYear() = (filmResult.getShort("release_year"));
-				film.setLanguageId() = (filmResult.getInt("language_id"));
-				film.setRentalDuration() = (filmResult.getInt("rental_duration"));
-				film.setRentalRate() = (filmResult.getDouble("rental_rate"));
-				film.setLength() = (filmResult.getInt("length"));
-				film.setReplacmentCost() = (filmResult.getDouble("replacement_cost"));
-				film.setRating() = (filmResult.getString("rating"));
-				film.setSpecialFeatures() = (filmResult.getString("special_features"));
+				film.setId(filmResult.getInt("Id"));
+				film.setTitle(filmResult.getString("title"));
+				film.setDescription(filmResult.getString("description"));
+				film.setReleaseYear(filmResult.getShort("release_year"));
+				film.setLanguageId(filmResult.getInt("language_id"));
+				film.setRentalDuration(filmResult.getInt("rental_duration"));
+				film.setRentalRate(filmResult.getDouble("rental_rate"));
+				film.setLength(filmResult.getInt("length"));
+				film.setReplacmentCost(filmResult.getDouble("replacement_cost"));
+				film.setRating(filmResult.getString("rating"));
+				film.setSpecialFeatures(filmResult.getString("special_features"));
+				// Call findActorsByFilmId();passing the provided film ID
+				// set the return list of actors into the film object.
+				List<Actor> actorList = findActorsByFilmId(filmId);
+				film.setFilmCast(actorList);
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -115,8 +120,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				actor.setLastName(actorResult.getString("last_name"));
 
 				// if(actorResult.next){
-				// String firstName = actorResult.getString.("first_name");
-				// String lastName = actorResult.getString.("last_name");
+				// String firstName = actorResult.getString("first_name");
+				// String lastName = actorResult.getString("last_name");
 				// actor = new Actor(actorId, firstName, lastName);
 				// }
 
