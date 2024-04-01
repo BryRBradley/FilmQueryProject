@@ -134,8 +134,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setLanguage(filmResult.getString("name"));
 				// Call findActorsByFilmId();passing the provided film ID
 				// set the return list of actors into the film object.
-				List<Actor> actorList = findActorsByFilmId(filmId);
-				film.setFilmCast(actorList);
+				// List<Actor> actorList = findActorsByFilmId(filmId);
+				// film.setFilmCast(actorList);
 				// film = new film(.....);
 			}
 			filmResult.close();
@@ -213,7 +213,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				// }
 
 			}
-			System.err.println();
+
 			actorResult.close();
 			stmt.close();
 			conn.close();
