@@ -38,9 +38,9 @@ learned through out the week.
 
 
 ## Coding Time and Testing
-29 March - V1/V2 coded 1530 - 2030 90% of the coding was complete with minimal testing.
-30 March - V3/V4 coded 0930 - 1400 I had list of problems I had to sort through one by one. I shouldve tested more and sooner. 
-31 March - V5 coded 2000-2145 - Final version of the application, added the README and did a little refactoring. 
+- 29 March - V1/V2 coded 1530 - 2030 90% of the coding was complete with minimal testing.
+- 30 March - V3/V4 coded 0930 - 1400 I had list of problems I had to sort through one by one. I shouldve tested more and sooner. 
+- 31 March - V5 coded 2000-2145 - Final version of the application, added the README and did a little refactoring. 
 
 
 ### Links 
